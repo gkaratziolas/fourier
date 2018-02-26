@@ -1,54 +1,61 @@
-"""
-A simple example of an animated plot
-"""
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+from scipy import signal
 
+TMAX  = 6*np.pi
+TSTEP = 0.01
+WMAX  = 10
+WSTEP = 0.01
 
 def complex_to_array(c):
+	"""converts complex numbers to (2,1) np array of reals"""
 	a = np.array([[],[]])
 	for n in c:
 		a = np.append(a, [[np.angle(n)], [np.absolute(n)]], axis=1)
 	return a
 
-fig = plt.figure()
-ax = fig.add_subplot(312, projection='polar')
-
-ax2 = fig.add_subplot(311)
-
-ax3 = fig.add_subplot(313)
-
-
 def g(t):
-	return np.cos(4*t)+1# + np.cos(3*t)
+	"""Returns a predefined function of time for a given time vector"""
+	#return signal.sawtooth(3*t, width=0.5)+1
+	return np.cos(4*t) + np.cos(3*t) + 1
 	#return np.cosh(t)
 	#return np.cos(t)*np.sin(10*t)
 
 def centre_of_mass(c):
+	"""Returns the mean of a set of complex values"""
 	m = 0
 	for n in c:
 		m += n
 	return m/len(c)
 
-t = np.arange(0, 6*np.pi, 0.01)
-w=0.00
+fig = plt.figure()
+
+ax2 = fig.add_subplot(2,2,1)
+ax = fig.add_subplot(223, projection='polar')
+ax3 = fig.add_subplot(224)
+
+
+
+
+
+t = np.arange(0, TMAX, TSTEP)
 
 ax2.plot(g(t))
 
-data = [g(t)*np.e**(1j*w*t), centre_of_mass(g(t)*np.e**(1j*w*t)), np.array([[0],[0]])]
+data = [g(t)*np.e**(1j*0.0*t), centre_of_mass(g(t)*np.e**(1j*0.0*t)), np.array([[],[]])]
 
 lines = []
 line, = ax.plot(1)
 lines.append(line)
 line, = ax.plot(1, "ro")
 lines.append(line)
-line, = ax3.plot(1)
+line, = ax3.plot([],[])
 lines.append(line)
-#line, = ax.plot(1)
-ax.set_rmax(2)
+
+ax.set_rmax(max(g(t))*1.1)
 ax.set_rticks([])
-ax3.set_xlim([0, 10])
+ax3.set_xlim([0, WMAX])
 ax3.set_ylim([-1, 1])
 
 
@@ -69,7 +76,7 @@ def animate(w):
 	return lines
 
 
-ani = animation.FuncAnimation(fig, animate, np.arange(0, 10, 0.01),
+ani = animation.FuncAnimation(fig, animate, np.arange(0, WMAX, WSTEP),
                               interval=25, blit=True, repeat=False)
 
 plt.show()
