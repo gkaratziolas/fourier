@@ -17,10 +17,10 @@ def complex_to_array(c):
 
 def g(t):
 	"""Returns a predefined function of time for a given time vector"""
-	return signal.sawtooth(3*t, width=0.5)
+	#return signal.sawtooth(3*t, width=0.5)
 	#return signal.square(t)
 	#return np.cos(4*t) + np.cos(3*t) + 1
-	#return np.cosh(t)
+	return np.cos(3*t)+1
 	#return np.cos(t)*np.sin(10*t)
 
 def centre_of_mass(c):
@@ -40,7 +40,7 @@ ax2 = fig.add_subplot(2,2,1)
 ax1 = fig.add_subplot(223, projection='polar')
 ax3 = fig.add_subplot(224)
 
-ax2.plot(t,g(t))
+line, = ax2.plot(t,g(t))
 
 data = [g(t)*np.e**(1j*0.0*t),
         centre_of_mass(g(t)*np.e**(1j*0.0*t)),
@@ -55,7 +55,7 @@ lines.append(line)
 
 line, = ax3.plot([],[], label='real')
 lines.append(line)
-line, = ax3.plot([],[], "g", label='imag')
+line, = ax3.plot([],[], "C1", label='imag')
 lines.append(line)
 ax3.legend()
 
