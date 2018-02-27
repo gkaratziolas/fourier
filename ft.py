@@ -29,45 +29,42 @@ def centre_of_mass(c):
 		m += n
 	return m/len(c)
 
+# create a time vector
+t = np.arange(0, TMAX, TSTEP)
+
+
 fig = plt.figure()
 
 ax2 = fig.add_subplot(2,2,1)
-ax = fig.add_subplot(223, projection='polar')
+ax1 = fig.add_subplot(223, projection='polar')
 ax3 = fig.add_subplot(224)
 
-
-
-
-
-t = np.arange(0, TMAX, TSTEP)
-
-ax2.plot(g(t))
+ax2.plot(t,g(t))
 
 data = [g(t)*np.e**(1j*0.0*t), centre_of_mass(g(t)*np.e**(1j*0.0*t)), np.array([[],[]])]
 
 lines = []
-line, = ax.plot(1)
+line, = ax1.plot(1)
 lines.append(line)
-line, = ax.plot(1, "ro")
+line, = ax1.plot(1, "ro")
 lines.append(line)
 line, = ax3.plot([],[])
 lines.append(line)
 
-ax.set_rmax(max(g(t))*1.1)
-ax.set_rticks([])
+ax1.set_rmax(max(g(t))*1.1)
+ax1.set_rticks([])
 ax3.set_xlim([0, WMAX])
 ax3.set_ylim([-1, 1])
 
 
 def animate(w):
-	data[0] = g(t)*np.e**(1j*(w)*t)
+	data[0] = np.array(g(t)*np.e**(1j*(w)*t))
+	
 	com = centre_of_mass(data[0])
 	data[1] = [com]
+	
 	ft = np.array([[w], [com.real]])
-
 	data[2] = np.append(data[2], ft, axis=1)
-
-	#ax.plot(centre_of_mass(b))
 
 	lines[0].set_data(complex_to_array(data[0]))
 	lines[1].set_data(complex_to_array(data[1]))
