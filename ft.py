@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 from scipy import signal
+import math
 
 TMAX  = 6*np.pi
 TSTEP = 0.01
@@ -34,7 +35,7 @@ def centre_of_mass(c):
 t = np.arange(0, TMAX, TSTEP)
 
 
-fig = plt.figure()
+fig = plt.figure(figsize=(20,10))
 
 ax2 = fig.add_subplot(2,2,1)
 ax1 = fig.add_subplot(223, projection='polar')
@@ -44,6 +45,7 @@ line, = ax2.plot(t,g(t))
 
 data = [g(t)*np.e**(1j*0.0*t),
         centre_of_mass(g(t)*np.e**(1j*0.0*t)),
+        np.array([[],[]]),
         np.array([[],[]]),
         np.array([[],[]])]
 
@@ -56,6 +58,8 @@ lines.append(line)
 line, = ax3.plot([],[], label='real')
 lines.append(line)
 line, = ax3.plot([],[], "C1", label='imag')
+lines.append(line)
+line, = ax3.plot([],[], "C2", label='mag')
 lines.append(line)
 ax3.legend()
 
@@ -73,13 +77,16 @@ def animate(w):
 	
 	ftr = np.array([[w], [com.real]])
 	fti = np.array([[w], [com.imag]])
+	ftm = np.array([[w], [math.sqrt(com.real**2+com.imag**2)]])
 	data[2] = np.append(data[2], ftr, axis=1)
 	data[3] = np.append(data[3], fti, axis=1)
+	data[4] = np.append(data[4], ftm, axis=1)
 
 	lines[0].set_data(complex_to_array(data[0]))
 	lines[1].set_data(complex_to_array(data[1]))
 	lines[2].set_data(data[2])
 	lines[3].set_data(data[3])
+	lines[4].set_data(data[4])
 
 	return lines
 
